@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+
+<style type="text/css">
+	
+	body{
+		background-color: black;
+	}
+	#tv{
+
+		display: block;
+		position: absolute;
+		justify-content: center;
+		align-content: center;
+		border: none; 
+		text-align: center;
+		
+	}
+	#ind{
+
+		display: block ;
+		position: absolute;
+		z-index: 11;
+	
+	}
+	#offInd{
+
+		display: block;
+		position: absolute;
+		left : 1220px;
+		top : 35px;
+		z-index: 13;
+
+
+	}
+	#onInd{
+
+		display: none;
+		position: absolute;
+		left : 1220px;
+		top : 35px;
+		z-index: 14;
+
+	}
+	#chInd{
+
+		display: block;
+		position: absolute;
+		left : 1220px;
+		top : 35px;
+		z-index: 11;
+
+	}
+	#tvSrc {
+
+		display: block;
+		position: absolute;
+		width: 1600px;
+		height: 900px;
+		z-index: 8;
+	
+	}
+	#dialBut{
+
+		z-index: 11;
+		display: block;
+		position: absolute;
+		width:	270px;
+		height: auto;
+		left: 1266px;
+		top: 343px;
+		transition : transform 0.5s ease-in-out;
+
+	}
+	#powerBut {
+
+		z-index: 11;
+		display: block;
+		position: absolute;
+		height: auto;
+		width: 100px;
+		top: 60px;
+		left: 1473px;
+		transform: rotate(45deg);
+		transition : transform 1s ease-in-out;
+
+	}
+	.input:hover {
+
+		cursor : pointer;
+		filter: brightness(60%);
+		
+	}
+	#volumeSlider{
+
+		position: absolute;
+		-webkit-appearance: none; 
+  		width: 320px; 
+		height: 15px;  
+		background: #ddd; 
+		outline: none; 
+		z-index: 13;
+		left: 1240px;
+		top: 780px;
+		cursor: pointer;
+		border-radius: 3px;
+		background-color: #45433e;
+
+		}
+
+	#volumeSlider::-webkit-slider-thumb{
+	
+		-webkit-appearance: none;
+		background-image: url('volDial.png');
+		width: 70px;
+		height: 40px;
+		background-repeat: none;
+		background-position: center center;
+		background-size: cover;
+
+	}
+	#volumeSlider::-webkit-slider-thumb:hover{
+	
+		filter: brightness(0.8);
+		cursor: pointer;
+
+	}
+	#blackScreen{
+
+		display: block;
+		position: absolute;
+		width: 1200px;
+		height: 850px;
+		left: 20px;
+		top: 30px;
+		background-color: black;
+		z-index : 6;
+		opacity: 1;
+		
+
+	}
+	#screen{
+
+		position: absolute;
+		width: 1200px;
+		height: 850px;
+		left: 20px;
+		top: 30px;
+		z-index : 4;
+
+	}
+	#movie{
+
+		position: absolute;
+		width: 1200 px;
+		height: 850px;
+		left: 20px;
+		top: 10px;
+		z-index: 4;
+
+	}
+	#effect{
+
+		display: block;
+		position: absolute;
+		width: 1200 px;
+		height: 850px;
+		left: 20px;
+		top: 10px;
+		z-index: 5;
+		opacity: 0.3;
+
+	}
+	#table {
+
+		display: block;
+		scale: 0.2;
+		width: 20px;
+		height: 80px;
+		left: 1640px;
+		top: 310px;
+		position: absolute;
+		transition: rotate(40deg);
+
+	}
+	#table:hover {
+
+		cursor: pointer;
+		filter: brightness(0.6);
+
+	}
+	#bigtable{
+
+		display: none;
+		position: absolute;
+		width: 50px;
+		height : 200px;
+		justify-content: center;
+		align-content: center;
+		scale : 0.5;
+		z-index: 17;
+		left: 400px;
+		top : 5px;
+		margin-top: 0;
+		border: none;
+	}
+
+</style>
+
+<body>
+
+	<div id = tv >
+		<img id = tvSrc src = "1.png">
+		<div id = ind>
+			<img id = offInd src = "off.png">
+			<img id = onInd src = "on.png">
+			<img id = chInd src = "ch1.png">
+		</div>
+		<input type = "range" min = "0" max = "100" value="100" id = volumeSlider>
+		<div  id = dial><img class = input id = dialBut src = "dial.png"></div>
+		<div id = screen>
+			<video id = movie src = "ch1.mp4" autoplay muted loop></video>
+			<video id = effect src = "super 8.mp4" autoplay muted loop></video>
+		</div>
+		<div id = blackScreen></div>
+		<div  id = power><img class = input id = powerBut src = "power.png"></div>
+	</div>
+	<div id = table><img id=tableBut src = "channel.png"></div>
+	<div id = bigtable><img id=bigtableBut src = "channel.png"></div>
+
+
+	<audio id = noise src = noise.mp3></audio>
+	<audio id = onSnd src = on.mp3></audio>
+	<script type="text/javascript">
+
+
+		var state = "off";
+
+		const chTrans = document.getElementById('chInd')
+		const chDial = document.getElementById('dialBut');
+		const effectStat = document.getElementById('effect')
+
+		let globalClickCount = 0;
+
+		chDial.addEventListener('click',() =>{
+
+		 	globalClickCount++;
+		 	chDial.style.transform = `rotate(${globalClickCount*36}deg)`;
+			
+		 			if (globalClickCount % 10 === 0){
+
+		 				setTimeout(()=>{
+
+		 					chInd.src = "ch1.png"	
+		 					movie.src = "ch1.mp4"
+		 					effectStat.style.display = 'block';
+		 					noise.pause();
+
+
+		 				},500)
+						
+					}else if(globalClickCount % 10 === 1){
+
+						setTimeout(()=>{
+
+		 					chInd.src = "ch2.png"
+		 					movie.src = "ch2.mp4"	
+
+		 				},500)
+
+					}else if(globalClickCount % 10 === 2){
+
+					setTimeout(()=>{
+
+		 					chInd.src = "ch3.png"	
+		 					movie.src = "ch3.mp4"
+
+		 				},500)
+
+					}else if(globalClickCount % 10 === 3){
+
+					setTimeout(()=>{
+
+		 					chInd.src = "ch4.png"	
+		 					movie.src = "ch4.mp4"
+
+		 				},500)
+
+					}else if(globalClickCount % 10 === 4){
+
+						setTimeout(()=>{
+
+		 					chInd.src = "ch5.png"	
+		 					movie.src = "ch5.mp4"
+		 					effectStat.style.display = 'none' ;
+		 					noise.play();
+
+		 				},500)
+
+					}else if(globalClickCount % 10 === 5){
+
+						
+						setTimeout(()=>{
+
+		 					chInd.src = "ch6.png"	
+		 					movie.src = "ch6.mp4"
+		 					effectStat.style.display = 'block';
+		 					noise.pause();
+
+		 				},500)
+
+					}else if(globalClickCount % 10 === 6){
+
+						setTimeout(()=>{
+
+		 					chInd.src = "ch7.png"	
+		 					movie.src = "ch7.mp4"
+
+		 				},500)
+
+					}else if(globalClickCount % 10 === 7){
+
+						setTimeout(()=>{
+
+		 					chInd.src = "ch8.png"
+		 					movie.src = "ch8.mp4"	
+
+		 				},500)
+
+					}else if(globalClickCount % 10 === 8){
+
+						setTimeout(()=>{
+
+		 					chInd.src = "ch9.png"
+		 					movie.src = "ch9.mp4"	
+
+		 				},500)
+
+					}else if(globalClickCount % 10 === 9){
+
+						setTimeout(()=>{
+
+		 					chInd.src = "ch0.png"
+		 					movie.src = "ch0.mp4"	
+		 					effectStat.style.display = 'none' ;
+		 					noise.play();
+
+
+		 				},500)
+
+					}
+
+				
+
+		});
+
+		const onStatus = document.getElementById('onInd')
+		const offStatus	= document.getElementById('offInd')
+		const curton = document.getElementById('blackScreen')
+		const movieStat = document.getElementById('movie')
+
+		powerBut.onclick = function(){
+			if(state == "off"){
+
+				state = "on";
+				powerBut.style.transform = `rotate(${-45}deg)`;
+				onStatus.style.display = 'block';
+				offStatus.style.display = 'none';
+				onSnd.play();
+
+			
+				setTimeout(() =>{
+
+					onStatus.style.display = 'none';
+					movieStat.muted = false;
+					offStatus.style.display = 'none';
+					curton.style.display = 'none';
+
+
+				}, 2000)
+
+					
+			}else if(state == "on"){
+
+				state = "off";
+				powerBut.style.transform = `rotate(${45}deg)`;
+				offStatus.style.display = 'block';
+				curton.style.display = 'block';
+				movieStat.muted = true;
+
+
+			}
+
+		}
+
+
+		volumeSlider.oninput = function(){
+			movie.volume = volumeSlider.value / 100;
+			noise.volume = volumeSlider.value / 100;
+		};
+
+		
+
+		tableBut.onclick = function(){
+
+			table.style.display = 'none';
+			bigtable.style.display= 'block';
+			tv.style.filter = 'brightness(0.6)'
+
+		}
+
+		bigtableBut.onclick = function(){
+
+			table.style.display = 'block';
+			bigtable.style.display = 'none';
+			tv.style.filter = 'brightness(1)'
+
+		}
+
+
+
+	</script>
+
+</body>
+</html>
